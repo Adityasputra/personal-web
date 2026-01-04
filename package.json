@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "test": "playwright test",
-    "test:e2e": "playwright test --project=chromium",
     "clean": "rm -rf .next"
   },
   "dependencies": {
@@ -47,7 +45,6 @@
     "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.2",
     "@types/date-fns": "^2.5.3",
     "@types/node": "^24",
     "@types/react": "^19",
