@@ -13,28 +13,25 @@ import { Badge } from "../ui/badge";
 import { contentData } from "@/data/aboutme/aboutme";
 import { useRouter } from "next/navigation";
 
-// Helper function to get grid class based on content size
-const getGridClass = (size: string) => {
-  switch (size) {
-    case "small":
-      return "col-span-1 row-span-1";
-    case "medium":
-      return "col-span-2 row-span-2";
-    case "large":
-      return "col-span-3 row-span-2";
-    case "extra-large":
-      return "col-span-4 row-span-3";
-    default:
-      return "col-span-2 row-span-2";
-  }
+const getGridClass = (index: number) => {
+  const gridClasses = [
+    "col-span-4 row-span-3",
+    "col-span-2 row-span-3",
+    "col-span-2 row-span-2",
+    "col-span-4 row-span-2",
+    "col-span-3 row-span-2",
+    "col-span-3 row-span-2",
+  ];
+
+  return gridClasses[index] || "col-span-2 row-span-2";
 };
 
 export default function AboutMe() {
   const router = useRouter();
+
   return (
     <section className="relative py-20 px-4 md:px-8 lg:px-20 text-foreground overflow-hidden">
       <div className="relative max-w-7xl mx-auto space-y-16 z-10">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -56,33 +53,22 @@ export default function AboutMe() {
             working toward
           </p>
 
-          {/* Quick Stats */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <motion.div
-              whileHover={{ y: -2 }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50 hover:bg-muted transition-colors"
-            >
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50">
               <Calendar className="w-4 h-4 text-primary" />
               <span>Active since 2022</span>
-            </motion.div>
-            <motion.div
-              whileHover={{ y: -2 }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50 hover:bg-muted transition-colors"
-            >
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50">
               <MapPin className="w-4 h-4 text-primary" />
               <span>Sidoarjo, Indonesia</span>
-            </motion.div>
-            <motion.div
-              whileHover={{ y: -2 }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50 hover:bg-muted transition-colors"
-            >
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-sm border border-border/50">
               <Coffee className="w-4 h-4 text-primary" />
               <span>Coffee Enthusiast</span>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
 
-        {/* Desktop Masonry Grid */}
         <div className="hidden lg:block">
           <div className="grid grid-cols-6 auto-rows-[120px] gap-4">
             {contentData.map((item, index) => (
@@ -91,191 +77,180 @@ export default function AboutMe() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5, scale: 1.01 }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
                 className={cn(
-                  "group relative overflow-hidden rounded-xl border border-border/30 bg-gradient-to-b from-muted/40 to-muted/20 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5",
-                  getGridClass(item.size || "medium")
+                  "group relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-muted/70 via-muted/50 to-muted/30 backdrop-blur-sm",
+                  getGridClass(index)
                 )}
               >
-                <div className="relative h-full p-5 flex flex-col">
-                  {/* Header with Badge */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <motion.div
-                        whileHover={{ rotate: 10, scale: 1.1 }}
-                        className="p-2 rounded-lg bg-primary/10 text-primary backdrop-blur-sm"
-                      >
+                <div className="relative h-full p-6 flex flex-col overflow-hidden">
+                  <div className="flex items-start justify-between mb-3 gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/25 to-primary/10 text-primary backdrop-blur-sm shrink-0 shadow-md">
                         {item.icon}
-                      </motion.div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground/90 group-hover:text-primary transition-colors">
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-bold text-foreground leading-tight">
                           {item.title}
                         </h3>
                       </div>
                     </div>
                     {item.badge && (
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs shrink-0 shadow-sm"
+                      >
                         {item.badge}
                       </Badge>
                     )}
                   </div>
 
-                  {/* Content */}
-                  <p className="text-sm text-muted-foreground/90 leading-relaxed flex-1 mb-3">
-                    {item.content}
-                  </p>
-
-                  {/* Stats */}
-                  {item.stats && (
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                      {item.stats.map((stat, statIndex) => (
-                        <motion.div
-                          key={statIndex}
-                          whileHover={{ y: -2 }}
-                          className="text-center py-2 rounded-lg bg-muted/50 border border-border/20 hover:bg-muted/70 transition-colors"
-                        >
-                          <div className="text-sm font-semibold text-primary">
-                            {stat.value}
-                          </div>
-
-                          <div className="text-xs text-muted-foreground">
-                            {stat.label}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  {item.tags && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {item.tags.map((tag, tagIndex) => (
-                        <Badge
-                          key={tagIndex}
-                          variant="default"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Quote */}
-                  {item.quote && (
-                    <div className="flex items-start gap-2 mt-auto pt-3 border-t border-border/10">
-                      <Quote className="w-3 h-3 text-primary/50 mt-0.5 flex-shrink-0" />
-                      <p className="text-xs italic text-primary/70">
-                        {item.quote}
+                  <div className="flex-1 overflow-y-auto scrollbar-hide pr-1">
+                    {item.content && (
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                        {item.content}
                       </p>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Hover Effect */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+                    {item.stats && (
+                      <div className="grid grid-cols-2 gap-2 mb-3">
+                        {item.stats.map((stat, statIndex) => (
+                          <div
+                            key={statIndex}
+                            className="text-center py-2 rounded-xl bg-gradient-to-br from-background/80 to-background/60 border border-border/40"
+                          >
+                            <div className="text-base font-bold text-primary">
+                              {stat.value}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {stat.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-        {/* Mobile & Tablet Auto-fit Grid */}
-        <div className="lg:hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-max">
-            {contentData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -3 }}
-                className={cn(
-                  "group relative overflow-hidden rounded-xl border border-border/30 bg-gradient-to-b from-muted/40 to-muted/20 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5",
-                  (item.size === "extra-large" || item.size === "large") &&
-                    "md:col-span-2"
-                )}
-              >
-                <div className="relative p-5">
-                  {/* Header with Badge */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <motion.div
-                        whileHover={{ rotate: 10, scale: 1.1 }}
-                        className="p-2 rounded-lg bg-primary/10 text-primary backdrop-blur-sm shrink-0"
-                      >
-                        {item.icon}
-                      </motion.div>
-                      <h3 className="text-lg font-semibold text-foreground/90 group-hover:text-primary transition-colors truncate">
-                        {item.title}
-                      </h3>
-                    </div>
-
-                    {item.badge && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-primary/5 text-primary/80 font-medium whitespace-nowrap">
-                        {item.badge}
-                      </span>
+                    {item.tags && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {item.tags.map((tag, tagIndex) => (
+                          <Badge
+                            key={tagIndex}
+                            variant="default"
+                            className="text-xs shadow-sm"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     )}
                   </div>
 
-                  {/* Content */}
-                  <p className="text-sm text-muted-foreground/90 leading-relaxed mb-3">
-                    {item.content}
-                  </p>
-
-                  {/* Stats */}
-                  {item.stats && (
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                      {item.stats.map((stat, statIndex) => (
-                        <motion.div
-                          key={statIndex}
-                          whileHover={{ y: -2 }}
-                          className="text-center py-2 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors"
-                        >
-                          <div className="text-sm font-semibold text-primary">
-                            {stat.value}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {stat.label}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  {item.tags && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {item.tags.map((tag, tagIndex) => (
-                        <motion.span
-                          key={tagIndex}
-                          whileHover={{ scale: 1.05 }}
-                          className="text-xs px-2.5 py-1 rounded-full bg-primary/5 text-primary/80 hover:bg-primary/10 hover:text-primary transition-colors"
-                        >
-                          {tag}
-                        </motion.span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Quote */}
                   {item.quote && (
-                    <div className="flex items-start gap-2 pt-3 border-t border-border/10">
-                      <Quote className="w-3 h-3 text-primary/50 mt-0.5 flex-shrink-0" />
-                      <p className="text-xs italic text-primary/70">
+                    <div className="flex items-start gap-2 mt-3 pt-3 border-t border-border/30">
+                      <Quote className="w-4 h-4 text-primary/70 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs italic text-primary/90 leading-relaxed">
                         {item.quote}
                       </p>
                     </div>
                   )}
-
-                  {/* Hover Effect */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Enhanced CTA */}
+        <div className="lg:hidden">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[160px]">
+            {contentData.map((item, index) => {
+              let mobileClass = "";
+
+              if (index === 0) {
+                mobileClass = "col-span-2 md:col-span-4 row-span-2";
+              } else if (index === 1 || index === 2) {
+                mobileClass = "col-span-1 md:col-span-2 row-span-2";
+              } else if (index === 3) {
+                mobileClass = "col-span-2 md:col-span-4 row-span-1";
+              } else {
+                mobileClass = "col-span-1 md:col-span-2 row-span-2";
+              }
+
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.06 }}
+                  className={cn(
+                    "group relative overflow-hidden rounded-xl border border-border/40 bg-gradient-to-br from-muted/70 via-muted/50 to-muted/30 backdrop-blur-sm",
+                    mobileClass
+                  )}
+                >
+                  <div className="relative h-full p-3.5 flex flex-col overflow-hidden">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="p-2 rounded-lg bg-gradient-to-br from-primary/25 to-primary/10 text-primary shrink-0">
+                          {item.icon}
+                        </div>
+                        <h3 className="text-xs md:text-sm font-bold text-foreground leading-tight line-clamp-2">
+                          {item.title}
+                        </h3>
+                      </div>
+                      {item.badge && (
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] shrink-0 px-1.5 py-0.5"
+                        >
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto scrollbar-hide">
+                      {item.content && (
+                        <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed mb-2 line-clamp-3">
+                          {item.content}
+                        </p>
+                      )}
+
+                      {item.stats && item.stats.length > 0 && (
+                        <div className="grid grid-cols-2 gap-1.5 mb-2">
+                          {item.stats.slice(0, 2).map((stat, statIndex) => (
+                            <div
+                              key={statIndex}
+                              className="text-center py-1.5 rounded-lg bg-background/70 border border-border/30"
+                            >
+                              <div className="text-xs font-bold text-primary">
+                                {stat.value}
+                              </div>
+                              <div className="text-[9px] text-muted-foreground leading-tight">
+                                {stat.label}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {item.tags && (
+                        <div className="flex flex-wrap gap-1">
+                          {item.tags.slice(0, 3).map((tag, tagIndex) => (
+                            <span
+                              key={tagIndex}
+                              className="text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-md bg-primary/10 text-primary font-medium border border-primary/20"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -284,41 +259,33 @@ export default function AboutMe() {
           className="text-center mt-12 space-y-6"
         >
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-sm font-medium border border-slate-300 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-            <span>
-              <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-            </span>
+            <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300" />
             <span>
               Keep growing, keep building — greatness is crafted, not gifted.
             </span>
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">
-            <motion.button
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => router.push("/portfolio")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary bg-primary/5 text-primary hover:bg-primary hover:text-background transition-all shadow-sm hover:shadow-primary/20"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary bg-primary/5 text-primary transition-all shadow-sm"
             >
               View Portfolio
               <ArrowRight className="w-4 h-4" />
-            </motion.button>
-            <motion.a
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            </button>
+            <a
               href="/Aditya-Saputra-Resume.pdf"
               download
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted/70 text-foreground hover:bg-muted transition-all shadow-sm hover:shadow-muted-foreground/10 border border-border/30 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted/70 text-foreground transition-all shadow-sm border border-border/30 cursor-pointer"
             >
               Download Resume
-            </motion.a>
-            <motion.button
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            </a>
+            <button
               onClick={() => router.push("/gallery")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted/70 text-foreground hover:bg-muted transition-all shadow-sm hover:shadow-muted-foreground/10 border border-border/30"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted/70 text-foreground transition-all shadow-sm border border-border/30"
             >
               Gallery
-            </motion.button>
+            </button>
           </div>
         </motion.div>
       </div>
